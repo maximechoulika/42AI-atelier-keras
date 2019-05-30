@@ -13,7 +13,7 @@ from helper import load_fruit_dataset
 ######                 LOAD DATA                ######
 ######################################################
 
-dataset_path = None # replace this line by the dataset path
+dataset_path = 'fruits-360' # replace this line by the dataset path
 
 assert dataset_path is not None
 
@@ -35,27 +35,32 @@ from helper import load_image, show_image
 ######################################################
 
 experiment     = time.strftime("%Y%m%d%H%M%S")
-nb_classes     = len(class_idx)
+nb_classes     = len(class_idx.keys())
 input_shape    = (100, 100, 3)
 batchsize      = 32
 nb_steps_train = train_set.shape[0] // batchsize
-nbrepoch       = 1
+nbrepoch       = 5
 
 ######################################################
 ######             INPUTGENERATOR               ######
 ######################################################
-# from input_generator import InputGenerator
+from input_generator import InputGenerator
 
-input_train = None # InputGenerator(train_set, nb_classes)
+input_train = InputGenerator(train_set, nb_classes)
 assert input_train is not None
 
 ######################################################
 ######                  MODEL                   ######
 ######################################################
-# from model_setup import get_model
+from helper import compile_model
+from tiny_resnet import TinyResNet
 
-model = None       # get_model(input_shape, nb_classes)
+model = TinyResNet(input_shape, nb_classes)
 assert model       is not None
+
+model.summary()
+
+model = compile_model(model)
 
 ######################################################
 ######              MODEL TRAINING              ######
@@ -77,5 +82,5 @@ h = model.fit_generator(
     callbacks=[tensorboard],
     # validation_data=input_validation.input_generator(batchsize=batchsize),
     # validation_steps=nb_steps_test,
-    max_queue_size=10, shuffle=True, initial_epoch=0,
+    # max_queue_size=10, shuffle=True, initial_epoch=0,
 )
