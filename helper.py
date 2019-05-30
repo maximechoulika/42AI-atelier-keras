@@ -63,8 +63,9 @@ def load_fruit_dataset(path, shuffle=False):
     train = []
     test  = []
     for key, val in class_idx.items():
-        for train_img, test_img in zip(train_set[key], test_set[key]):
+        for train_img in train_set[key]:
             train.append([val, train_img])
+        for test_img in test_set[key]:
             test.append([val, test_img])
         del train_set[key]
         del test_set[key]
